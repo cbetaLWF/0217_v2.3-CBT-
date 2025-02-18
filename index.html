@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>推し布教Photoめ～か～!!(CβT版)</title>
+    <style>
+        body { text-align: center; font-family: Arial, sans-serif; }
+        canvas { border: 1px solid #ccc; margin-top: 10px; }
+        .controls { margin-top: 10px; }
+        
+        /* 横並び用のコンテナ */
+        .instruction-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px; /* 画像間のスペース */
+            margin-top: 20px;
+        }
+
+        /* 画像のスタイル */
+        .instruction-images {
+            max-width: 20%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h2>推し布教Photoめ～か～!!(CβT版)</h2>
+    <input type="file" id="imageUpload" accept="image/*">
+    <input type="text" id="textInput" placeholder="テキストを入力(最大288文字)">
+    <button onclick="generateImage()">画像作成</button>
+    <button id="downloadBtn" style="display: none;" onclick="downloadImage()">画像をダウンロード！</button>
+    <a id="twitterShare" href="#" target="_blank" style="display: none;">画像をDLかスクショしてXでシェア！！</a>
+    <canvas id="canvas"></canvas>
+
+    <!-- 追加: 横並びで表示する説明用画像 -->
+    <div class="instruction-container" id="instructionContainer">
+        <img src="HowToUse.jpg" class="instruction-images" id="howToUse">
+        <img src="Example.jpg" class="instruction-images" id="exampleImg">
+    </div>
+
+    <script>
+        function generateImage() {
+            const canvas = document.getElementById("canvas");
+            const ctx = canvas.getContext("2d");
+            const input = document.getElementById("imageUpload").files[0];
+            const text = document.getElementById("textInput").value;
+            const template = new Image();
+            template.src = "template.jpg";
+
+            template.onload = function() {
+                canvas.width = template.width;
+                canvas.height = template.height;
+                ctx.drawImage(template, 0, 0);
+
+                if (input) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const userImage = new Image();
+                        userImage.src = e.target.result;
+                        userImage.onload = function() {
+                            const maxImageWidth = 1000;
+                            const maxImageHeight = 1000;
+                            let imgWidth = userImage.width;
+                            let imgHeight = userImage.height;
+
+                            if (imgWidth > maxImageWidth || imgHeight > maxImageHeight) {
+                                const aspectRatio = imgWidth / imgHeight;
+                                if (imgWidth > imgHeight) {
+                                    imgWidth = maxImageWidth;
+                                    imgHeight = maxImageWidth / aspectRatio;
+                                } else {
+                                    imgHeight = maxImageHeight;
+                                    imgWidth = maxImageHeight * aspectRatio;
+                                }
+                            }
+
+                            ctx.save();
+                            ctx.translate(150, 150);
+                            ctx.rotate(6 * Math.PI / 180);
+                            ctx.drawImage(userImage, -imgWidth / 2 + 440, -imgHeight / 2 + 375, imgWidth, imgHeight);
+                            ctx.restore();
+
+                            ctx.font = "40px Mv Boli";
+                            ctx.fillStyle = "black";
+                            ctx.textAlign = "center";
+                            const textX = 545;
+                            const textY = 1470;
+                            const maxTextWidth = 960;
+                            const lineHeight = 40;
+
+                            fillWrappedText(ctx, text, textX, textY, maxTextWidth, lineHeight);
+
+                            document.getElementById("downloadBtn").style.display = "inline";
+
+                            const dataURL = canvas.toDataURL("image/png");
+                            document.getElementById("twitterShare").href = `https://twitter.com/intent/tweet?text=推し布教Photoめ～か～!!で画像を作成しました！&url=https://cbetalwf.github.io/0217-2/&hashtags=VRide!,推し布教Photoめ～か～`;
+                            document.getElementById("twitterShare").style.display = "inline";
+
+                            // 画像作成後にHowToUse.jpgとExample.jpgを非表示にする
+                            document.getElementById("instructionContainer").style.display = "none";
+                        };
+                    };
+                    reader.readAsDataURL(input);
+                }
+            };
+        }
+
+        function fillWrappedText(ctx, text, x, y, maxTextWidth, lineHeight) {
+            const words = text.split('');
+            let line = '';
+            let lines = [];
+
+            for (let i = 0; i < words.length; i++) {
+                let testLine = line + words[i];
+                let testWidth = ctx.measureText(testLine).width;
+
+                if (testWidth > maxTextWidth && i > 0) {
+                    lines.push(line);
+                    line = words[i];
+                } else {
+                    line = testLine;
+                }
+            }
+            lines.push(line);
+
+            for (let j = 0; j < lines.length; j++) {
+                ctx.fillText(lines[j], x, y + j * lineHeight);
+            }
+        }
+
+        function downloadImage() {
+            const canvas = document.getElementById("canvas");
+            const link = document.createElement("a");
+            link.download = "created_image.png";
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        }
+    </script>
+</body>
+</html>
