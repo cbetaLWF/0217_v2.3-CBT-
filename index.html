@@ -33,10 +33,9 @@
     <a id="twitterShare" href="#" target="_blank" style="display: none;">ココをクリックしてXでシェア！！</a>
     <canvas id="canvas"></canvas>
 
-    <!-- 追加: 横並びで表示する説明用画像 -->
+    <!-- 説明用画像（Example.jpgを削除） -->
     <div class="instruction-container" id="instructionContainer">
         <img src="HowToUse.jpg" class="instruction-images" id="howToUse">
-        <img src="Example.jpg" class="instruction-images" id="exampleImg">
     </div>
 
     <script>
@@ -93,13 +92,9 @@
 
                             document.getElementById("downloadBtn").style.display = "inline";
 
-                            const dataURL = canvas.toDataURL("image/png");
                             document.getElementById("twitterShare").href = `https://twitter.com/intent/tweet?text=（すみません間に合わなかったので手動で画像を添付してください．推し布教Photoめーかー タグのポストはRPしてまわります！！）&hashtags=推し布教Photoめーかー!!で作成しました！！`;
-                            // URL, VRide!タグはCBT版では消去
-                            // ～（波選）はハッシュタグではじかれる．
                             document.getElementById("twitterShare").style.display = "inline";
 
-                            // 画像作成後にHowToUse.jpgとExample.jpgを非表示にする
                             document.getElementById("instructionContainer").style.display = "none";
                         };
                     };
