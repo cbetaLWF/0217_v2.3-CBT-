@@ -9,66 +9,25 @@
         canvas { border: 1px solid #ccc; margin-top: 10px; }
         .controls { margin-top: 10px; }
         
-        /* ボタンのスタイル（ユニバーサルカラー） */
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            margin: 5px;
-        }
-        
-        /* ファイル選択ボタン（赤系） */
-        #imageUpload {
-            background-color: #D64550;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        
-        /* 画像作成ボタン（オレンジ系） */
-        button:nth-of-type(1) {
-            background-color: #E67E22;
-            color: white;
-        }
-        
-        /* 画像ダウンロードボタン（緑系） */
-        #downloadBtn {
-            background-color: #4CAF50;
-            color: white;
-        }
-        
-        /* X（Twitter）シェアボタン（青系） */
-        #twitterShare {
-            display: inline-block;
-            background-color: #1DA1F2;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-size: 16px;
-        }
-        
         /* 横並び用のコンテナ */
         .instruction-container {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 20px; /* 画像間のスペース */
             margin-top: 20px;
         }
-        
+
         /* 画像のスタイル（レスポンシブ対応） */
         .instruction-images {
             max-width: 100%;
             height: auto;
-            width: 20%;
+            width: 50%; /* デフォルト（PC）で50%の幅 */
         }
 
+        /* スマホ向けに調整 */
         @media (max-width: 768px) {
             .instruction-images {
-                width: 80%;
+                width: 80%; /* スマホでは幅を広げる */
             }
         }
     </style>
@@ -140,14 +99,47 @@
                             fillWrappedText(ctx, text, textX, textY, maxTextWidth, lineHeight);
 
                             document.getElementById("downloadBtn").style.display = "inline";
+
                             document.getElementById("twitterShare").href = `https://twitter.com/intent/tweet?text=（すみません間に合わなかったので手動で画像を添付してください．推し布教Photoめーかー タグのポストはRPしてまわります！！）&hashtags=推し布教Photoめーかー!!で作成しました！！`;
                             document.getElementById("twitterShare").style.display = "inline";
+
                             document.getElementById("instructionContainer").style.display = "none";
                         };
                     };
                     reader.readAsDataURL(input);
                 }
             };
+        }
+
+        function fillWrappedText(ctx, text, x, y, maxTextWidth, lineHeight) {
+            const words = text.split('');
+            let line = '';
+            let lines = [];
+
+            for (let i = 0; i < words.length; i++) {
+                let testLine = line + words[i];
+                let testWidth = ctx.measureText(testLine).width;
+
+                if (testWidth > maxTextWidth && i > 0) {
+                    lines.push(line);
+                    line = words[i];
+                } else {
+                    line = testLine;
+                }
+            }
+            lines.push(line);
+
+            for (let j = 0; j < lines.length; j++) {
+                ctx.fillText(lines[j], x, y + j * lineHeight);
+            }
+        }
+
+        function downloadImage() {
+            const canvas = document.getElementById("canvas");
+            const link = document.createElement("a");
+            link.download = "created_image.png";
+            link.href = canvas.toDataURL("image/png");
+            link.click();
         }
     </script>
 </body>
