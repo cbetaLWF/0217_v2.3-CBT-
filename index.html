@@ -17,10 +17,18 @@
             margin-top: 20px;
         }
 
-        /* 画像のスタイル */
+        /* 画像のスタイル（レスポンシブ対応） */
         .instruction-images {
-            max-width: 20%;
+            max-width: 100%;
             height: auto;
+            width: 50%; /* デフォルト（PC）で50%の幅 */
+        }
+
+        /* スマホ向けに調整 */
+        @media (max-width: 768px) {
+            .instruction-images {
+                width: 80%; /* スマホでは幅を広げる */
+            }
         }
     </style>
 </head>
