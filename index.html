@@ -9,25 +9,57 @@
         canvas { border: 1px solid #ccc; margin-top: 10px; }
         .controls { margin-top: 10px; }
         
+        /* ボタンのスタイル（ユニバーサルカラー） */
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 5px;
+        }
+        
+        /* 画像作成ボタン（青系） */
+        button:nth-of-type(1) {
+            background-color: #0078D4;
+            color: white;
+        }
+        
+        /* 画像ダウンロードボタン（緑系） */
+        #downloadBtn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        /* X（Twitter）シェアボタン（黒系） */
+        #twitterShare {
+            display: inline-block;
+            background-color: #1DA1F2;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        
         /* 横並び用のコンテナ */
         .instruction-container {
             display: flex;
             justify-content: center;
-            gap: 20px; /* 画像間のスペース */
+            gap: 20px;
             margin-top: 20px;
         }
-
+        
         /* 画像のスタイル（レスポンシブ対応） */
         .instruction-images {
             max-width: 100%;
             height: auto;
-            width: 50%; /* デフォルト（PC）で50%の幅 */
+            width: 20%;
         }
 
-        /* スマホ向けに調整 */
         @media (max-width: 768px) {
             .instruction-images {
-                width: 80%; /* スマホでは幅を広げる */
+                width: 80%;
             }
         }
     </style>
@@ -99,10 +131,8 @@
                             fillWrappedText(ctx, text, textX, textY, maxTextWidth, lineHeight);
 
                             document.getElementById("downloadBtn").style.display = "inline";
-
                             document.getElementById("twitterShare").href = `https://twitter.com/intent/tweet?text=（すみません間に合わなかったので手動で画像を添付してください．推し布教Photoめーかー タグのポストはRPしてまわります！！）&hashtags=推し布教Photoめーかー!!で作成しました！！`;
                             document.getElementById("twitterShare").style.display = "inline";
-
                             document.getElementById("instructionContainer").style.display = "none";
                         };
                     };
